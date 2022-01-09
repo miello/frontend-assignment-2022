@@ -15,6 +15,7 @@ export const Title = styled('h1', {
 
 export const NotFound = styled('h5', {
   fontFamily: '$kanit',
+  textAlign: 'center',
   color: '$primary',
   fontSize: '$6',
   margin: 0,

@@ -18,6 +18,16 @@ export const useTripData = () => {
   const fetchTripData = useCallback(
     async (search: string, pages: number, pushHistory: boolean) => {
       setError(false)
+
+      let query = {} as Record<string, any>
+      if (search) {
+        query['search'] = search
+      }
+
+      if (pages !== 1) {
+        query['pages'] = pages
+      }
+
       try {
         const res = await apiClient.get<ITripResponse>(
           `/api/trips?search=${search}&&pages=${pages}`
@@ -31,19 +41,8 @@ export const useTripData = () => {
               .split('\n\n'),
           }
         })
-        let query = {} as Record<string, any>
         setTrips(tripsDisplay)
         setAllPages(res.data.allPages)
-
-        if (search) {
-          query['search'] = search
-        }
-
-        if (pages !== 1) {
-          query['pages'] = pages
-        }
-
-        if (pushHistory) changeQueryParams(query)
       } catch (err) {
         const axiosErr = err as AxiosError<{ error: string }>
         const msgErr = axiosErr.response?.data.error || axiosErr.message
@@ -51,6 +50,7 @@ export const useTripData = () => {
         setError(true)
       }
       setLoading(false)
+      if (pushHistory) changeQueryParams(query)
     },
     [triggerAlert]
   )
